@@ -5,7 +5,7 @@
 // @include        http*://*.dlsite.com/*
 // @exclude        http*://*.dlsite.com/*eng*
 // @grant          none
-// @version        1.1
+// @version        1.1.1
 // @license        http://creativecommons.org/licenses/by-nc-nd/3.0/us/
 // @project page   https://github.com/Zero-G-Sys/DLStrans
 // @downloadURL    https://raw.github.com/Zero-G-Sys/DLStrans/master/Japanese_DLSite_translation.user.js
@@ -15,10 +15,6 @@
   'use strict';
 
 //Custom script
-if (document.getElementById('search_text').placeholder.localeCompare('キーワードから探す（作品名、サークル名など）') === 0) {
-  document.getElementById('search_text').placeholder = 'Search by keyword (work name, circle name, etc.)';
-}
-
 let reviewButtons = document.getElementsByClassName('_btn_good_review btn_default');
 if (reviewButtons !== undefined && reviewButtons[0] !== undefined) {
   Array.from(reviewButtons).forEach(function (item) {
@@ -43,7 +39,7 @@ var work_right = document.getElementById('work_right');
 if (work_right !== null){
   (new MutationObserver(function(mutationsList, observer) {
       for(const mutation of mutationsList) {
-          if(mutation.addedNodes[0].className == 'work_right_info'){
+          if(mutation.addedNodes[0] && mutation.addedNodes[0].className == 'work_right_info'){
             // Stop this observer as it is not necessary anymore, and the following changes
             // would trigger it.
             this.disconnect(); 
@@ -73,7 +69,7 @@ var work_right_name = document.getElementById('work_right_name');
 if (work_right_name !== null){
   (new MutationObserver(function(mutationsList, observer) {
       for(const mutation of mutationsList) {
-          if(mutation.addedNodes[0].className == 'link_cien'){
+          if(mutation.addedNodes[0] && mutation.addedNodes[0].className == 'link_cien'){
             this.disconnect();
 
             mutation.addedNodes[0].innerHTML = mutation.addedNodes[0].innerHTML.replace('ファンクラブで支援する', 'Support author on Ci-En');
@@ -87,7 +83,7 @@ var work_buy_box_wrapper = document.getElementById('work_buy_box_wrapper');
 if (work_buy_box_wrapper !== null){
   (new MutationObserver(function(mutationsList, observer) {
       for(const mutation of mutationsList) {
-          if(mutation.addedNodes[0].id == 'work_price'){
+          if(mutation.addedNodes[0] && mutation.addedNodes[0].id == 'work_price'){
             this.disconnect();
 
             let purchaseElem = document.getElementsByClassName('work_buy_main')[0];
@@ -114,7 +110,7 @@ var header = document.getElementById('header');
 if (header !== null){
   (new MutationObserver(function(mutationsList, observer) {
       for(const mutation of mutationsList) {
-        if(mutation.addedNodes[0].className == 'noticeNav'){
+        if(mutation.addedNodes[0] && mutation.addedNodes[0].className == 'noticeNav'){
           this.disconnect();
 
           mutation.addedNodes[0].innerHTML = mutation.addedNodes[0].innerHTML.replace('ポイント', 'Points');
@@ -132,9 +128,9 @@ if (header !== null){
 // Was using this method before using mutation observers
 $(window).load(function () {
   let favElem = document.getElementsByClassName('work_dl clear')[0];
-  if (favElem !== undefined) {
+  if (favElem) {
     let favElemChild = favElem.children[0];
-    favElemChild.innerHTML = favElemChild.innerHTML.replace('お気に入り数', 'Favorited');
+    if (favElemChild) favElemChild.innerHTML = favElemChild.innerHTML.replace('お気に入り数', 'Favorited');
   }
 
   
@@ -152,10 +148,15 @@ $(window).load(function () {
   }
   
   let work_buy_box_wrapper = document.getElementById('work_buy_box_wrapper');
-  let btn_buy = work_buy_box_wrapper.getElementsByClassName('btn_buy');
-  if (btn_buy !== undefined && btn_buy[1] !== undefined) {
+  let btn_buy;
+  if(work_buy_box_wrapper) btn_buy = work_buy_box_wrapper.getElementsByClassName('btn_buy');
+  if (btn_buy && btn_buy[1]) {
     btn_buy[1].innerHTML = btn_buy[1].innerHTML.replace('会員登録して購入', 'Buy');
     btn_buy[1].innerHTML = btn_buy[1].innerHTML.replace('すぐに購入', 'Buy');
+  }
+  
+  if (document.getElementById('search_text').placeholder.localeCompare('キーワードから探す（作品名、サークル名など）') === 0) {
+    document.getElementById('search_text').placeholder = 'Search by keyword (work name, circle name, etc.)';
   }
 });
 
@@ -208,6 +209,7 @@ function doAfterReplacements(){
   '新着レビュー': 'New Reviews',
   '専売作品': 'Exclusive Products',
   '無料作品': 'Free Products',
+  'ボイスコミック': 'Voiced Comics',
   'ワンコイン作品': 'One-Coin Products',
   '成年コミック': 'Adult Comics',
   'にじGAME': 'NijiGAME',
@@ -294,6 +296,9 @@ function doAfterReplacements(){
   'スマホ': 'Smart phone',
   '寝取られ': 'Netorare',
   '純愛': 'Pure love',
+  '単行本': 'Book',
+  '雑誌/アンソロ': 'Magazine / Anthology',
+  
     
     // End of Custom
     
